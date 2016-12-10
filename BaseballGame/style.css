@@ -1,0 +1,49 @@
+h1 {
+  font-family: "맑은고딕", san-serif;
+  text-shadow: 5px 5px 5px rgb(94, 86, 86);
+}
+#wrap{
+  border: 0px solid rgb(255, 255, 255);
+  padding: 20px;
+  width: 550px;
+  height: auto;
+  border-radius: 20px;
+  text-align:center;
+  background-image: url(bground1.jpg);
+  background-size: 100% 100%;
+}
+#statusBox{
+  border: 0px solid rgb(255, 255, 255);
+  padding: 25px;
+  width: 500px;
+  height: 250px;
+  min-height: 200px;
+  overflow: auto;
+  clear: both;
+  display:inline-block;
+  font-size:16px;
+  text-align: left;
+  background-image: url(hyunjin.jpg);
+  background-size: 100% 100%;
+}
+#randomBoxWrap{
+  display:inline-block;
+}
+#restartBtn{
+  display: none;
+}
+.randomBox {
+  border-style: outset;
+  width: 100px;
+  height: 100px;
+  float: left;
+  margin: 10px;
+  font-size: 60px;
+  font-weight: bold;
+}
+.inputBox{
+  width: 30px;
+  height: 50px;
+  font-size: 40px;
+  text-align: center;
+}

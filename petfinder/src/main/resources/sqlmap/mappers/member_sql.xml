@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="member">
+
+	<resultMap id="memberResultMap" type="com.petfinder.vo.MemberVO">
+		<id property="id" column="M_ID" />
+		<id property="pwd" column="M_PASSWORD" />
+		<id property="name" column="M_NAME" />
+		<id property="phone" column="M_PHONE" />
+		<id property="region1" column="M_REGION1" />
+		<id property="region2" column="M_REGION2" />
+		<id property="region3" column="M_REGION3" />
+		<id property="dog" column="M_DOG" />
+		<id property="size" column="M_SIZE" />
+		<id property="color" column="M_COLOR" />
+		<id property="gender" column="M_GENDER" />
+	</resultMap>
+
+	<!-- -->
+	<insert id="insertmember" parameterType="memberVO">
+		<![CDATA[
+		INSERT INTO
+			MEMBER(M_ID, M_PASSWORD, M_NAME, M_PHONE, M_REGION1, M_REGION2, M_REGION3, M_DOG, M_SIZE, M_COLOR, M_GENDER) 
+		VALUES
+			(#{id}, #{pwd}, #{name}, #{phone}, #{region1}, #{region2}, #{region3}, #{dog}, #{size}, #{color}, #{gender})
+		]]>
+	</insert>
+
+	<insert id="insertfile" parameterType="hashmap">
+	    <![CDATA[
+	    INSERT INTO
+	    	MEMBER_FILE(M_ID, M_ORIGINAL_FILE_NAME, M_STORED_FILE_NAME, M_FILE_SIZE) 
+	    VALUES
+	    	(#{M_ID}, #{M_ORIGINAL_FILE_NAME}, #{M_STORED_FILE_NAME}, #{M_FILE_SIZE})
+	    ]]>
+	</insert>
+
+	<!-- -->
+	<select id="getmember" parameterType="String" resultType="hashmap">
+		<![CDATA[
+		SELECT *
+		FROM  MEMBER A
+          INNER JOIN MEMBER_FILE B
+                  ON A.M_ID = B.M_ID
+		WHERE
+			A.M_ID = #{sessionId}
+		]]>
+	</select>
+
+	<!-- -->
+	<select id="duplication" parameterType="String" resultMap="memberResultMap">
+		SELECT
+			M_ID
+		FROM
+			MEMBER
+		WHERE 
+			M_ID = #{duplicationId}
+	</select>
+
+
+	<!-- -->
+	<select id="loginmember" parameterType="hashmap" resultMap="memberResultMap">
+	    <![CDATA[
+	    SELECT
+	    	M_ID
+	    FROM
+	    	MEMBER
+	    WHERE
+	    	M_ID=#{id} AND M_PASSWORD=#{pwd}
+	    ]]>
+	</select>
+
+	<select id="deletemember" parameterType="String">
+	    <![CDATA[
+	        DELETE
+	        FROM
+	        	MEMBER
+	        WHERE
+	        	M_ID = #{id}
+	    ]]>
+	</select>
+
+	<select id="deletememberfile" parameterType="String">
+	    <![CDATA[
+	        DELETE
+	        FROM
+	        	MEMBER_FILE
+	        WHERE
+	        	M_ID = #{id}
+	    ]]>
+	</select>
+
+	<update id="updateMember" parameterType="memberVO">
+		<![CDATA[
+		    UPDATE
+		    	MEMBER
+			SET 
+				M_PASSWORD = #{pwd}, 
+				M_NAME = #{name}, 
+				M_PHONE = #{phone}, 
+				M_REGION1 = #{region1}, 
+				M_REGION2 = #{region2}, 
+				M_REGION3 = #{region3}, 
+				M_DOG = #{dog},  
+				M_SIZE = #{size}, 
+				M_COLOR = #{color}, 
+				M_GENDER = #{gender} 
+			WHERE
+				M_ID = #{id}
+		]]>
+	</update>
+
+	<update id="updateMemberFile" parameterType="hashmap">
+		<![CDATA[
+		MERGE INTO MEMBER_FILE
+		USING DUAL
+		ON (M_ID = #{M_ID})
+		WHEN MATCHED THEN
+				UPDATE SET
+				M_ORIGINAL_FILE_NAME = #{M_ORIGINAL_FILE_NAME},
+				M_STORED_FILE_NAME = #{M_STORED_FILE_NAME}, 
+				M_FILE_SIZE = #{M_FILE_SIZE}
+		WHEN NOT MATCHED THEN
+				INSERT (M_ID, M_ORIGINAL_FILE_NAME, M_STORED_FILE_NAME, M_FILE_SIZE) 
+				VALUES (#{M_ID}, #{M_ORIGINAL_FILE_NAME}, #{M_STORED_FILE_NAME}, #{M_FILE_SIZE})
+		]]>
+	</update>
+</mapper>
+
+

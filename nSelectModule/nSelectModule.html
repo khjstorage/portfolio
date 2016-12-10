@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>nSelectModule</title>
+<script>
+window.onload = function() {
+	var moduleObj = new SelectModule([ 'firstSelect', 'secondSelect', 'thirdSelect', 'fourthSelect', 'fifth' ]);
+	moduleObj.init();
+}
+
+var SelectModule = function(pSelectIds) {
+	
+	if(!(this instanceof SelectModule)){
+		return new SelectModule(pSelectIds);
+	}
+	
+	var selectIdArr = pSelectIds;
+	
+	var jsonObj = {
+			"area":[
+			        { "id" : "1000", "pid" : "", "name" : "전라남도"},
+					{ "id" : "1001", "pid" : "1000", "name" : "목포"},
+					{ "id" : "1001-1", "pid": "1001", "name" : "대성동"},
+					{ "id" : "1001-2", "pid": "1001", "name" : "호남동"},
+					{ "id" : "1001-3", "pid": "1001", "name" : "목원동"},
+			        { "id" : "1002", "pid" : "1000", "name" : "여수"},
+					{ "id" : "1002-1", "pid": "1002", "name" : "둔덕동"},
+					{ "id" : "1002-2", "pid": "1002", "name" : "미평동"},
+					{ "id" : "1002-3", "pid": "1002", "name" : "화양면"},
+					{ "id" : "1002-3-1", "pid": "1002-3", "name" : "창무2길"},
+					{ "id" : "1002-3-2", "pid": "1002-3", "name" : "창무3길"},
+			        { "id" : "1003", "pid" : "1000", "name" : "순천"},
+					{ "id" : "1003-1", "pid": "1003", "name" : "조례동"},
+					{ "id" : "1003-2", "pid": "1003", "name" : "가곡동"},
+					{ "id" : "1003-3", "pid": "1003", "name" : "중앙동"},
+					{ "id" : "1003-3-1", "pid": "1003-3", "name" : "유동2길"},
+					{ "id" : "1003-3-2", "pid": "1003-3", "name" : "유동3길"},
+					{ "id" : "1003-3-2-1", "pid": "1003-3-1", "name" : "SK빌"},					
+			        { "id" : "1004", "pid" : "1000", "name" : "나주"},
+			        { "id" : "1005", "pid" : "1000", "name" : "광양"},
+					{ "id" : "2000", "pid" : "", "name" : "전라북도"},
+			        { "id" : "2001", "pid" : "2000", "name" : "전주"},
+					{ "id" : "2001-1", "pid": "2001", "name" : "완산구"},
+					{ "id" : "2001-2", "pid": "2001", "name" : "덕진구"},
+			        { "id" : "2002", "pid" : "2000", "name" : "군산"},
+			        { "id" : "2003", "pid" : "2000", "name" : "익산"},
+			        { "id" : "2004", "pid" : "2000", "name" : "정읍"},
+					{ "id" : "2004-1", "pid": "2004", "name" : "수성동"},
+					{ "id" : "2004-2", "pid": "2004", "name" : "장명동"},
+			        { "id" : "2005", "pid" : "2000", "name" : "남원"},
+			        { "id" : "2006", "pid" : "2000", "name" : "김제"}
+				   ]
+	};
+	
+	function slectCreator(){
+		for(var i = 0; i < selectIdArr.length; i++) {
+			var selectTag = document.createElement('select');
+			var selectOption = document.createElement('option');
+			var textNode = document.createTextNode("-선택-");
+			selectTag.id = selectIdArr[i];
+			selectOption.appendChild(textNode);
+			selectTag.appendChild(selectOption);
+			document.getElementById("divSelector").appendChild(selectTag);
+		}
+	}
+	
+	this.init = function() {
+		slectCreator();
+		var selectTagObj = document.getElementById(selectIdArr[0]);
+		var rootNodes = findNodes("");
+		
+		for (var i = 0; i < rootNodes.length; i++) {
+			var optionTag = document.createElement('option');
+			var textNode = document.createTextNode(rootNodes[i].name);
+			optionTag.value = rootNodes[i].id;
+			optionTag.appendChild(textNode);
+			selectTagObj.appendChild(optionTag);
+		}
+		
+		for(var i = 0; i < selectIdArr.length-1; i++) {
+			var selectTagObj = document.getElementById(selectIdArr[i]);
+			selectTagObj.onchange = changeHandler;
+		}
+	};
+	
+	function changeHandler(event) {
+		var eventTargetId = event.target.id;
+		var selectIndex = findIndex(eventTargetId);
+		for(var i = 0; i < selectIdArr.length; i++){
+			var selectTagObj = document.getElementById(eventTargetId);
+			var nextSelectTagObj = document.getElementById(selectIdArr[selectIndex+1]);
+			var id = selectTagObj.options[selectTagObj.selectedIndex].value;
+			var childNodes = findNodes(id);
+			
+	    	for(var i = selectIndex+1 ; i<selectIdArr.length ; i++){
+	    		var resetObj = document.getElementById(selectIdArr[i]);
+	    		resetObj.options.length = 1;
+	    	}
+			
+			for (var j = 0; j < childNodes.length; j++) {
+				var optionTag = document.createElement('option');
+				var textNode = document.createTextNode(childNodes[j].name);
+				optionTag.value = childNodes[j].id;
+				optionTag.appendChild(textNode);
+				nextSelectTagObj.appendChild(optionTag);
+			}
+		}
+	}
+	
+	function findIndex(pId) {
+		for(var i=0; i<selectIdArr.length; i++){
+			if(pId==selectIdArr[i]){
+				return i;
+			}
+		}
+	}
+	
+	function findNodes(pId) {
+		var jsonObjArea = jsonObj.area;
+		var foundNodes = [];
+		for (var i = 0; i < jsonObjArea.length; i++) {
+			if (pId == jsonObjArea[i].pid) {
+				foundNodes.push(jsonObjArea[i]);
+			}
+		}
+		return foundNodes;
+	}
+};
+
+</script>
+</head>
+<body>
+	<div id="divSelector">
+	</div>
+</body>
+</html>

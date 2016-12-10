@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="disappearance">
+
+	<resultMap id="disappearanceListResultMap" type="com.petfinder.vo.DisappearanceVO">
+		<id property="idx" column="D_IDX" />
+		<id property="id" column="D_ID" />
+		<id property="phone1" column="D_PHONE" />
+		<id property="phone2" column="D_EMERTGENCY_PHONE" />
+		<id property="dogname" column="D_NAME" />
+		<id property="dog" column="D_DOG" />
+		<id property="size" column="D_SIZE" />
+		<id property="color" column="D_COLOR" />
+		<id property="gender" column="D_GENDER" />
+		<id property="date" column="D_DATE" />
+		<id property="region" column="D_REGION" />
+		<id property="title" column="D_TITLE" />
+		<id property="detail" column="D_DETAIL" />
+	</resultMap>
+
+
+
+	<insert id="insertDisappearance" parameterType="disappearanceVO" useGeneratedKeys="true" keyProperty="IDX">
+	<selectKey keyProperty="idx" resultType="string" order="BEFORE">
+		SELECT
+			SEQ_DISAPPEARANCE_IDX.NEXTVAL
+		FROM
+			DUAL
+	</selectKey>
+    <![CDATA[
+        INSERT INTO
+        	DISAPPEARANCE(D_IDX, D_ID, D_PHONE, D_EMERTGENCY_PHONE, D_DOGNAME, D_DOG, D_SIZE, D_COLOR, D_GENDER, D_DATE, D_REGION, D_TITLE, D_DETAIL)
+        VALUES
+        	(#{idx}, #{id}, #{phone1}, #{phone2}, #{dogname}, #{dog}, #{size}, #{color}, #{gender}, #{date}, #{region}, #{title}, #{detail})
+    ]]>
+	</insert>
+
+	<insert id="insertDisappearanceFile" parameterType="hashmap">
+       <![CDATA[
+        INSERT INTO
+        	DISAPPEARANCE_FILE(D_FILE_IDX, D_BOARD_IDX, D_ORIGINAL_FILE_NAME, D_STORED_FILE_NAME, D_FILE_SIZE) 
+        VALUES
+        	(SEQ_DISAPPEARANCE_FILE_IDX.NEXTVAL, #{D_BOARD_IDX}, #{D_ORIGINAL_FILE_NAME}, #{D_STORED_FILE_NAME}, #{D_FILE_SIZE})
+       ]]>
+	</insert>
+
+
+	<select id="disappearanceList" parameterType="disappearanceVO" resultType="hashmap">
+		<![CDATA[
+			SELECT 
+			  *
+			FROM
+			  (SELECT 
+			    *
+			  FROM
+			    DISAPPEARANCE
+			  ORDER BY
+			    TO_NUMBER(D_IDX) DESC) A
+		    FULL OUTER JOIN  (SELECT 
+                    D_BOARD_IDX,
+                    D_STORED_FILE_NAME
+                   FROM
+                     DISAPPEARANCE_FILE ) B
+               ON A.D_IDX = B.D_BOARD_IDX
+			WHERE
+			  ROWNUM <= 4
+		]]>
+	</select>
+
+
+	<select id="selectBoardDetail" parameterType="String" resultType="hashmap">
+	    <![CDATA[
+	        SELECT 
+	        	D.*, TO_CHAR(D_DATE, 'YYYY-MM-DD')D_DATE_1  
+	        FROM
+	        	DISAPPEARANCE D 
+	        WHERE
+	        	D_IDX = #{idx}        
+	    ]]>
+	</select>
+
+	<select id="selectBoardDetailFile" parameterType="hashmap" resultType="hashmap">
+	    <![CDATA[
+	        SELECT
+	        	D_FILE_IDX,
+	            D_BOARD_IDX,
+	            D_ORIGINAL_FILE_NAME,
+	            ROUND(D_FILE_SIZE/1024,1) AS D_FILE_SIZE
+	        FROM
+	            DISAPPEARANCE_FILE
+	        WHERE
+	            D_BOARD_IDX = #{idx}
+	    ]]>
+	</select>
+
+
+	<select id="deleteDisappearance" parameterType="String">
+	    <![CDATA[
+	        DELETE
+	        FROM
+	        	DISAPPEARANCE
+	        WHERE
+	        	D_IDX = #{idx}
+	    ]]>
+	</select>
+
+	<select id="deleteDisappearanceFile" parameterType="String">
+	    <![CDATA[
+	        DELETE 
+	        FROM
+	        	DISAPPEARANCE_FILE 
+	        WHERE
+	        	D_BOARD_IDX = #{idx}
+	    ]]>
+	</select>
+
+
+	<update id="updateDisappearance" parameterType="disappearanceVO">
+		<![CDATA[
+		    UPDATE 
+		    	DISAPPEARANCE
+			SET
+				D_PHONE = #{phone1}, 
+				D_EMERTGENCY_PHONE = #{phone2}, 
+				D_DOGNAME = #{dogname}, 
+				D_DOG = #{dog}, 
+				D_SIZE = #{size}, 
+				D_COLOR = #{color}, 
+				D_GENDER = #{gender},  
+				D_DATE = #{date}, 
+				D_REGION = #{region}, 
+				D_TITLE = #{title}, 
+				D_DETAIL = #{detail}
+			WHERE
+				D_IDX = #{idx}
+		]]>
+	</update>
+
+	<update id="updateDisappearanceFile" parameterType="hashmap">
+		<![CDATA[		
+		MERGE INTO DISAPPEARANCE_FILE
+		USING DUAL
+		ON (D_BOARD_IDX = #{D_BOARD_IDX})
+		WHEN MATCHED THEN
+				UPDATE SET
+				D_ORIGINAL_FILE_NAME = #{D_ORIGINAL_FILE_NAME},
+				D_STORED_FILE_NAME = #{D_STORED_FILE_NAME}, 
+				D_FILE_SIZE = #{D_FILE_SIZE}
+		WHEN NOT MATCHED THEN
+				INSERT (D_FILE_IDX, D_BOARD_IDX, D_ORIGINAL_FILE_NAME, D_STORED_FILE_NAME, D_FILE_SIZE) 
+				VALUES (SEQ_DISAPPEARANCE_FILE_IDX.NEXTVAL, #{D_BOARD_IDX}, #{D_ORIGINAL_FILE_NAME}, #{D_STORED_FILE_NAME}, #{D_FILE_SIZE})
+		]]>
+	</update>
+
+
+	<select id="matchDisappearance" parameterType="findsVO"	resultType="hashmap">
+		<![CDATA[
+  		  SELECT 
+			* 
+		FROM 
+			DISAPPEARANCE A
+      FULL OUTER JOIN  (SELECT 
+                     D_BOARD_IDX,
+                     D_STORED_FILE_NAME
+                    FROM
+                      DISAPPEARANCE_FILE ) B
+                ON A.D_IDX = B.D_BOARD_IDX
+		WHERE
+			D_COLOR=#{color} AND D_DOG=#{dog} AND D_GENDER=#{gender} AND D_SIZE=#{size}
+		ORDER BY 
+			TO_NUMBER(D_IDX) DESC		
+		]]>
+	</select>
+
+
+
+	<select id="selectFileInfo" parameterType="hashmap" resultType="hashmap">
+   		<![CDATA[
+        SELECT
+            D_STORED_FILE_NAME,
+            D_ORIGINAL_FILE_NAME
+        FROM
+            DISAPPEARANCE_FILE
+        WHERE
+            D_BOARD_IDX = #{idx}
+   		]]>
+	</select>
+	
+	
+	<select id="idcheckDisappearance" parameterType="String" resultType="String">
+		<![CDATA[
+		SELECT 
+			D_ID 
+		FROM 
+			DISAPPEARANCE 
+		WHERE
+			D_IDX=#{idx}
+		]]>
+	</select>
+	
+	
+	<select id="postCount" resultType="java.lang.Integer">
+		<![CDATA[
+		SELECT
+			NVL(COUNT(*),0) count
+		FROM 
+			DISAPPEARANCE
+		]]>
+	</select>	
+	
+	<select id="searchPostCount" resultType="java.lang.Integer">
+		<![CDATA[
+		SELECT
+			NVL(COUNT(*),0) count
+		FROM 
+			DISAPPEARANCE
+		WHERE
+		]]>
+			<choose>
+			    <when test="selection_search == 'title'">
+			       UPPER(D_TITLE) like UPPER('%' ||  #{keyWord_search} || '%')
+			    </when>
+			    <when test="selection_search == 'contents'">
+			       UPPER(D_DETAIL) like UPPER('%' ||  #{keyWord_search} || '%')
+			    </when>
+			    <otherwise>
+			       UPPER(D_TITLE) like UPPER('%' ||  #{keyWord_search} || '%') OR UPPER(D_DETAIL) like UPPER('%' ||  #{keyWord_search} || '%')
+			    </otherwise>
+			</choose>
+	</select>	
+	
+	
+	<select id="getBoardList" resultType="hashmap" parameterType="PagingVO">
+		<![CDATA[
+		SELECT
+			*
+		FROM
+			(SELECT 
+				ROWNUM rnum,
+				A.*
+			FROM 
+				(SELECT * FROM DISAPPEARANCE ORDER BY TO_NUMBER(D_IDX) DESC) A
+			WHERE 
+				ROWNUM <= #{endRowNum}) B
+		FULL OUTER JOIN  (SELECT 
+                     D_BOARD_IDX,
+                     D_STORED_FILE_NAME
+                    FROM
+                      DISAPPEARANCE_FILE ) C
+                ON B.D_IDX = C.D_BOARD_IDX
+		WHERE 
+			rnum >= #{startRowNum}
+		]]>
+	</select>
+	
+	<select id="searchDisappearance" parameterType="hashmap" resultType="hashmap">
+ 		<![CDATA[
+ 		SELECT
+			*
+		FROM
+			(SELECT 
+				ROWNUM rnum,
+				A.*
+			FROM 
+				(SELECT
+	 				*
+				FROM
+			 		DISAPPEARANCE
+				WHERE
+					]]>
+		        <choose>
+				    <when test="selection_search == 'title'">
+				       UPPER(D_TITLE) like UPPER('%' ||  #{map.keyWord_search} || '%')
+				    </when>
+				    <when test="selection_search == 'contents'">
+				       UPPER(D_DETAIL) like UPPER('%' ||  #{map.keyWord_search} || '%')
+				    </when>
+				    <otherwise>
+				       UPPER(D_TITLE) like UPPER('%' ||  #{map.keyWord_search} || '%') OR UPPER(D_DETAIL) like UPPER('%' ||  #{map.keyWord_search} || '%')
+				    </otherwise>
+		        </choose>
+				<![CDATA[
+				ORDER BY
+					TO_NUMBER(D_IDX) DESC) A
+			WHERE 
+				ROWNUM <= #{pagingVO.endRowNum}) B
+		        	FULL OUTER JOIN  (SELECT 
+		                     			D_BOARD_IDX,
+		                     			D_STORED_FILE_NAME
+		                    		  FROM
+		                      			DISAPPEARANCE_FILE ) C
+		            ON B.D_IDX = C.D_BOARD_IDX
+		WHERE 
+			rnum >= #{pagingVO.startRowNum}
+		]]>
+	</select>
+</mapper>
+

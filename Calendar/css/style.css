@@ -1,0 +1,19 @@
+﻿@import url(http://fonts.googleapis.com/earlyaccess/nanumgothic.css);
+* {font-family: 'Nanum Gothic', serif;}
+
+#kCalendar {width: 100%; height: 100%; border: 1px solid black;}
+
+#kCalendar #header {height: 250px; line-height: 250px; text-align: center; font-size: 80px; font-weight: bold}
+#kCalendar .button {color: #000; text-decoration: none;}
+
+#kCalendar table {width: 100%; height: 800px;}
+#kCalendar caption {display: none;}
+
+#kCalendar .sun {text-align: center; color: deeppink; font-size: 20px;}
+#kCalendar .mon {text-align: center;font-size: 20px;}
+#kCalendar .tue {text-align: center;font-size: 20px;}
+#kCalendar .wed {text-align: center;font-size: 20px;}
+#kCalendar .thu {text-align: center;font-size: 20px;}
+#kCalendar .fri {text-align: center;font-size: 20px;}
+#kCalendar .sat {text-align: center; color: deepskyblue;font-size: 20px;}
+#kCalendar tr > td {width:100px;}

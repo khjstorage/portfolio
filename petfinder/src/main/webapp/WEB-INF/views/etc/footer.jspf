@@ -1,0 +1,15 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+</head>
+<body>
+<footer>
+	<div>
+		<h3>SPECIAL THANKS TO</h3>
+		<h3>김대성, 김현우, 최주혁, 김상훈</h3>
+	</div>
+</footer>
+</body>
+</html>

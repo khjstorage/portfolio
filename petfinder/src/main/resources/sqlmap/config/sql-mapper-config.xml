@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+    
+    <typeAliases>
+    	<typeAlias alias="memberVO" type="com.petfinder.vo.MemberVO" />
+    	<typeAlias alias="disappearanceVO" type="com.petfinder.vo.DisappearanceVO" />
+    	<typeAlias alias="findsVO" type="com.petfinder.vo.FindsVO" />
+    	<typeAlias alias="pagingVO" type="com.petfinder.vo.PagingVO" />
+    </typeAliases>
+    
+
+	<mappers>
+        <mapper resource="/sqlmap/mappers/member_sql.xml" />
+        <mapper resource="/sqlmap/mappers/disappearance_sql.xml" />
+        <mapper resource="/sqlmap/mappers/finds_sql.xml" />
+   </mappers> 
+
+ 
+</configuration>

@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
+<link href="css/style.css" rel="stylesheet">
+<title>contextMenu</title>
+<script>
+window.onload = function(){
+  var moduleObj = new ContextMenu('menuDiv');
+  moduleObj.init();
+
+  var moduleObj2 = new ContextMenu('menuDiv2');
+  moduleObj2.init();
+
+  var moduleObj3 = new ContextMenu('menuDiv3');
+  moduleObj3.init();
+}
+
+/* author : 김현진 ContextMenu
+ * 생성일 : 20160804
+ * function name : ContextMenu
+ * param  :
+ * function :
+ * return :
+ * desc :
+ */
+var ContextMenu = function(boxDivId, pJson){
+  if(!(this instanceof ContextMenu)){
+    return new ContextMenu(boxDivId);
+  }
+  var menuDivArr = [];
+  MenuJsonObj = pJson || [
+                          {seq :1,   icon: "fa fa-file",      id : "newFolder",   pid : "",       name : "새 폴더(N)",     func:function(){console.log("새 폴더(N)");}},
+                          {seq :2,   icon: "fa fa-search",    id : "view",        pid : "",       name : "보기(V)",        func:function(){console.log("보기(V)");}},
+                          {seq :3,   icon: "",                id : "big",         pid : "view",   name : "큰아이콘(M)",    func:function(){console.log("큰아이콘(M)");}},
+                          {seq :4,   icon: "",                id : "small",       pid : "view",   name : "작은아이콘(N)",  func:function(){console.log("작은아이콘(N)");}},
+                          {seq :5,   icon: "fa fa-list",      id : "sort",        pid : "",       name : "정렬 기준(O)",   func:function(){console.log("정렬 기준(O)");}},
+                          {seq :6,   icon: "",                id : "name",        pid : "sort",   name : "이름",           func:function(){console.log("이름");}},
+                          {seq :7,   icon: "",                id : "number",      pid : "sort",   name : "숫자",           func:function(){console.log("숫자");}},
+                          {seq :8,   icon: "",                id : "one",         pid : "number", name : "1",              func:function(){console.log("숫자");}},
+                          {seq :9,   icon: "",                id : "two",         pid : "number", name : "2",              func:function(){console.log("숫자");}},
+                          {seq :10,  icon: "",               id : "threse",       pid : "number", name : "3",              func:function(){console.log("숫자");}},
+                          {seq :11,  icon: "",               id : "size",         pid : "sort",   name : "크기",           func:function(){console.log("크기");}},
+                          {seq :12,  icon: "",               id : "realbigsize",  pid : "size",   name : "개큼",           func:function(){console.log("개큼");}},
+                          {seq :13,  icon: "",                id : "bigsize",     pid : "size",   name : "큼",                                                 },
+                          {seq :14,  icon: "fa fa-repeat",    id : "reload",      pid : "",       name : "새로 고침(E)",  func:function(){window.location.reload();}},
+                          {seq :15,  icon: "fa fa-files-o",   id : "copy",        pid : "",       name : "복사(C)",       func:function(){console.log("복사(C)");}},
+                          {seq :16,  icon: "fa fa-clipboard", id : "paste",       pid : "",       name : "붙여넣기(V)",   func:function(){console.log("붙여넣기(V)");}},
+                     		];
+
+  /* author : 김현진 init
+   * 생성일 : 20160804
+   * 수정일 :
+   * 수정내용 :
+   * function name : init
+   * param  : n/a
+   * return :
+   * desc :
+   */
+  	this.init = function(){
+  		var divDOMObj = document.getElementById(boxDivId);
+  		divDOMObj.oncontextmenu = clickHandler;
+  		document.addEventListener("click",function(){
+                                            return removeMenuByMenuArr(menuDivArr);
+                                        });
+  	}
+
+  /* author : 김현진 removeAllMenuDiv
+   * 생성일 : 20160804
+   * 수정일 :
+   * 수정내용 :
+   * function name : removeAllMenuDiv
+   * param  : pNum
+   * return :
+   * desc : param으로 들어온 숫자부터 menuDivArr길이까지 만들어진 div를 삭제하고 menuDivArr길이를 param으로 변경
+   */
+    function removeAllMenuDiv(pNum){
+      for(var i=pNum; i<menuDivArr.length; i++){
+        var menuDivId = menuDivArr[i];
+        console.log(menuDivId);
+        document.getElementById(menuDivId).remove();
+      }
+      menuDivArr.length=pNum;
+    }
+
+  /* author : 김현진 removeMenuByMenuArr
+   * 생성일 : 20160809
+   * 수정일 :
+   * 수정내용 :
+   * function name : removeMenuByMenuArr
+   * param  : pMenuArr
+   * return :
+   * desc :
+   */
+    function removeMenuByMenuArr(pMenuArr){
+        for(var i=0; i<menuDivArr.length; i++){
+          var menuDivId = menuDivArr[i];
+          console.log(menuDivId);
+          document.getElementById(menuDivId).remove();
+        }
+        menuDivArr.length=0;
+    }
+
+  /* author : 김현진 sortMenu
+   * 생성일 : 20160804
+   * 수정일 :
+   * 수정내용 :
+   * function name : sortMenu
+   * param  : pArr, pSortKey
+   * return : pArr
+   * desc : param pArr들어온 배열을 param pSortKey 기준으로 정렬
+            a인자가 b인자보다 배열 앞 0보다 작은수가 return
+            a인자가 b인자보다 배열 뒤 0보다 큰수가 return
+   */
+    function sortMenu(pArr, pSortKey){
+      pArr.sort(function (a, b) {
+    	    return a[pSortKey] < b[pSortKey] ? -1 : a[pSortKey] > b[pSortKey] ? 1 : 0;
+      });
+      return pArr;
+    }
+
+  /* author : 김현진 findNodes
+   * 생성일 : 20160804
+   * 수정일 :
+   * 수정내용 :
+   * function name : findNodes
+   * param  : pId
+   * return : childNodes
+   * desc : param 으로 넘어온 pId와 MenuJsonObj에있는 pid가 같은 객체를 childNodes 배열에 담고 정렬후 리턴
+   */
+    function findNodes(pId){
+      var childNodes = [];
+      for(var i=0; i<MenuJsonObj.length; i++){
+        if ( pId == MenuJsonObj[i]['pid'] ){
+          childNodes.push(MenuJsonObj[i]);
+        }
+      }
+      childNodes = sortMenu(childNodes, "seq");
+      return childNodes;
+    }
+
+  /* author : 김현진 isMenuDrawn
+   * 생성일 : 20160804
+   * 수정일 :
+   * 수정내용 :
+   * function name : isMenuDrawn
+   * param  : n/a
+   * return : 1.true
+              2.false
+   * desc : 현재 menuDivArr가 존재하면 false 리턴, menuDivArr가 없다면 true 리턴
+   */
+    function isMenuDrawn(){
+      if(menuDivArr.length>0){
+        return true;
+      }
+      return false;
+    }
+
+  /* author : 김현진 clickHandler
+   * 생성일 : 20160804
+   * 수정일 :
+   * 수정내용 :
+   * function name : clickHandler
+   * param  : event
+   * return :
+   * desc : menuDivArr가 존재 하지 않으면 pId가 "" 값인 노드들을 찾아 메뉴 생성
+            menuDivArr가 존재 한다면 pId가 ""값만 남기고 메뉴 삭제후 메뉴생성
+   */
+  	function clickHandler(event){
+      var menuDivObj = null;
+      if(isMenuDrawn()==true){
+        removeAllMenuDiv(1);
+        menuDivObj = document.getElementById(menuDivArr[0]);
+      }else{
+        menuDivObj = buildHTML("");
+      }
+  		var rect = this.getBoundingClientRect();
+
+      var divDOMObj = document.getElementById(boxDivId);
+      //var xPosition = event.clientX + document.body.scrollLeft + document.documentElement.scrollLeft+'px';
+      //var yPosition = event.clientY + document.body.scrollTop + document.documentElement.scrollTop+'px';
+
+      // The pageXOffset and pageYOffset properties returns the pixels the current document has been scrolled from the upper left corner of the window, horizontally and vertically.
+      // pageXOffset 현재 나타나는 페이지 X위치, 익스플로러 지원되지 않음
+      // innerWidth 창 표시 영역의 너비(픽셀), 익스플로러 지원되지 않음
+      var xPosition = event.clientX + window.pageXOffset + 'px';
+      var yPosition = event.clientY + window.pageYOffset + 'px';
+      var xBasedLeft = window.pageXOffset + window.innerWidth;
+      var yBasedTop = window.pageYOffset + window.innerHeight;
+
+      if(parseInt(xPosition, 10) + menuDivObj.offsetWidth > xBasedLeft){
+         xPosition = document.body.offsetWidth - menuDivObj.offsetWidth + window.pageXOffset + 'px';
+      }
+      if(parseInt(yPosition, 10) + menuDivObj.offsetHeight > yBasedTop){
+         yPosition = document.body.offsetHeight - menuDivObj.offsetHeight +  'px';
+      }
+
+      menuDivObj.style.left = xPosition;
+      menuDivObj.style.top = yPosition;
+  	}
+
+
+  /* author : 김현진 liClickHandler
+   * 생성일 : 20160804
+   * 수정일 :
+   * 수정내용 :
+   * function name : liClickHandler
+   * param  : pThis, pNodeArrObj, pTp, pDivId
+   * return :
+   * desc : 자식 노드들이 없는 경우 메뉴의 func 프로퍼티가 함수인 경우 함수를 실행하고 메뉴를 지움 함수가 아닐경우 메뉴만 지움
+            자식 노드들이 있는 경우 선택한 메뉴의 인덱스 까지 메뉴를 삭제함
+            버블링을 방지
+   */
+  	function liClickHandler(pThis, pNodeArrObj, pTp, pDivId){
+  		if ( pTp == 'NoChildNode' ){
+  			if ( typeof pNodeArrObj.func == 'function' ){
+  				pNodeArrObj.func();
+  				removeAllMenuDiv(0);
+  			} else {
+          removeAllMenuDiv(0);
+        }
+  		}else{
+  			var divNodeIndex = findNodeIndex(pDivId)
+  			if(divNodeIndex<menuDivArr.length-1){
+          removeAllMenuDiv(divNodeIndex+1);
+  			}
+  			var menuDivObj = buildHTML(pNodeArrObj.id);
+  			var rect = pThis.getBoundingClientRect();
+
+        var divDOMObj = document.getElementById(boxDivId);
+
+        var topPosition = rect.top  + window.pageYOffset+'px';
+        var leftPosition = rect.right +window.pageXOffset+'px';
+
+        var xBasedLeft = window.pageXOffset + window.innerWidth;
+        var yBasedTop = window.pageYOffset + window.innerHeight;
+
+		// offsetHeight, offsetWidth
+        // Height, width of a <div> element, including padding and border
+        if(parseInt(topPosition, 10) + menuDivObj.offsetHeight > yBasedTop){
+           topPosition = yBasedTop - menuDivObj.offsetHeight + 'px';
+        }
+
+         if(parseInt(leftPosition, 10) + menuDivObj.offsetWidth > xBasedLeft){
+            var parentDiv = document.getElementById(pDivId);
+            leftPosition = parseInt(leftPosition,10) - parentDiv.offsetWidth - menuDivObj.offsetWidth +'px';
+         }
+
+        menuDivObj.style.top = topPosition;
+        menuDivObj.style.left = leftPosition;
+      }
+
+  		if(event.stopPropagation){
+  			event.stopPropagation();
+  		}else{
+  			event.cancelBubble=true;
+  		}
+  	}
+
+  /* author : 김현진 buildHTML
+   * 생성일 : 20160804
+   * function name : buildHTML
+   * param  : pId
+   * return : divDOMObj
+   * desc :
+   *		 1. 두번째 인자값을 id로 갖는 div객체 생성후 클래스 이름 지정
+   *		 2. 첫번째 인자값인 배열의 길이만큼 ul, li태그 생성
+   *		 3. li태그에 배열의name값을 추가(하위메뉴와 icon의 유무에 따라 span과 icon 추가)
+   *		 4. ul에 onclick 이벤트 핸들러 IFEE방법으로 지정
+   */
+  	function buildHTML(pId){
+      var nodesArr = findNodes(pId);
+      var divId = genGuid();
+      menuDivArr.push(divId);
+
+  		var divDOMObj = document.createElement("div");
+  		divDOMObj.id = divId;
+  		divDOMObj.className = 'menu-active';
+
+  		for(var i=0; i<nodesArr.length; i++){
+  			var ulDOMObj = document.createElement("ul");
+  			var liDOMObj = document.createElement("li");
+  			liDOMObj.id = nodesArr[i].id;
+        liDOMObj.className = nodesArr[i].icon;
+
+  			if ( hasChildNodes(nodesArr[i].id) ){
+          liDOMObj.innerHTML = nodesArr[i].name;
+          var spanDOMObj = document.createElement("span");
+          var textNode = document.createTextNode("▶");
+          spanDOMObj.appendChild(textNode);
+          spanDOMObj.className = "menu-arrow"
+          liDOMObj.appendChild(spanDOMObj);
+  				liDOMObj.onclick = (function(j){
+  		            return function() {
+  		                return liClickHandler(this, nodesArr[j], 'ChildNode', divId);
+  		            }
+  		        })(i);
+  			}else{
+  				liDOMObj.innerHTML = nodesArr[i].name+"　";
+  				liDOMObj.onclick = (function(j){
+  		            return function() {
+  		                return liClickHandler(this, nodesArr[j], 'NoChildNode');
+  		            }
+  		        })(i);
+  			}
+  			ulDOMObj.appendChild(liDOMObj);
+  			divDOMObj.appendChild(ulDOMObj);
+  		}
+  		document.body.appendChild(divDOMObj);
+  		return divDOMObj;
+  	}
+
+  /* author : 김현진 hasChildNodes
+   * 생성일 : 20160804
+   * 수정일 :
+   * 수정내용 :
+   * function name : hasChildNodes
+   * param  : pId
+   * return : boolean
+   * desc : 자식노들이 존재하면 true리턴 자식노드가 존재 하지않으면 false리턴
+   */
+  	function hasChildNodes(pId){
+  		var isFound = false;
+  		for(var i=0; i<MenuJsonObj.length; i++){
+  			if ( pId == MenuJsonObj[i]['pid'] ){
+  				isFound = true;
+  				break;
+  			}
+  		}
+  		return isFound;
+  	}
+
+  /* author : 김현진 findNodeIndex
+   * 생성일 : 20160804
+   * 수정일 :
+   * 수정내용 :
+   * function name : findNodeIndex
+   * param  : pId
+   * return : i
+   * desc : 메뉴 클릭시 몇번째 인덱스인지 숫자를 리턴해줌
+   */
+    function findNodeIndex(pId){
+  		for(var i=0 ; i<menuDivArr.length;i++){
+  			if(pId==menuDivArr[i]){
+  				return i;
+  			}
+  		}
+  	}
+
+  /* author : 김현진 genGuid
+   * 생성일 : 20160804
+   * function name : genGuid
+   * param  : n/a
+   * return : v.toString(16)
+   * desc : 메뉴가 생성되는 div에 className을 주는 함수 (정규표현식 사용)
+   */
+  	function genGuid(){
+  	    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+  	        var r = Math.random()*16|0, v = c === 'x' ? r : (r&0x3|0x8);
+  	        return v.toString(16);
+  	    });
+  	}
+};
+
+</script>
+</head>
+<body oncontextmenu="return false">
+  <div id="menuDiv" style="width:200px; height:200px; border: 2px solid black;">menuDiv</div>
+  <div id="menuDiv2" style="width:500px;height:500px; border: 2px solid black;">menuDiv2</div>
+  <div id="menuDiv3" style="width:1500px;height:1000px; border: 2px solid black;">menuDiv3</div>
+</body>
+</html>

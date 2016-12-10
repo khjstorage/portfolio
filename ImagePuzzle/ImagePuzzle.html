@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>ImagePuzzle</title>
+<link href="css/style.css" rel="stylesheet">
+<script>
+//이 의미는 현재 진행중인 이벤트가 다른 이벤트에 의해 방해를 받지 않고 진행한다는 의미입니다.
+//드래그 중에 다른 예외적인 이벤트가 발생해서 드래그 이벤트가 종료되지 않게 막는것이죠.
+function allowDrop(event) {
+    event.preventDefault();
+}
+
+function drag(event) {
+    event.dataTransfer.setData("Text", event.target.id);
+}
+
+function drop(event) {
+    event.preventDefault();
+    var data = event.dataTransfer.getData("Text");
+    var newImg = document.getElementById(data);
+    if(event.target.nodeName != "IMG"){
+        event.target.appendChild(newImg);
+    }else{
+        var preDiv = event.target.parentNode;
+        var newDiv = newImg.parentNode;
+        preDiv.appendChild(newImg);
+        newDiv.appendChild(event.target);
+       }
+    }
+</script>
+</head>
+<body>
+  <div class="quiz" id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="./img/1.jpg" src="./img/1.jpg" ondragstart="drag(event)" draggable="true"/></div>
+  <div class="quiz" id="div2" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="./img/2.jpg" src="./img/2.jpg" ondragstart="drag(event)" draggable="true"/></div>
+  <div class="quiz" id="div3" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="./img/3.jpg" src="./img/3.jpg" ondragstart="drag(event)" draggable="true"/></div>
+  <div class="quiz" id="div4" ondrop="drop(event)" ondragover="allowDrop(event)"><img id="./img/4.jpg" src="./img/4.jpg" ondragstart="drag(event)" draggable="true"/></div>
+
+  <div class="answer" id="div5" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+  <div class="answer" id="div6" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+  <div class="answer" id="div7" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+  <div class="answer" id="div8" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+</body>
+</html>

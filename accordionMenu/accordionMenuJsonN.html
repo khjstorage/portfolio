@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>AccordionMenu Json</title>
+<style>
+  .hide{display:none}
+  #main {
+     width: 200px;
+     padding: 0px;
+     margin: 0px auto;
+     position: relative;
+     text-align: center;
+     font-size: 20px;
+     box-shadow: 1px 5px 20px 1px rgba(0,0,0,0.3);
+     color: #999999;
+     background-color: #ffffff;
+     text-shadow: 0px 0px 1px #000000;
+  }
+  ul, li {
+     margin: 0px;
+     padding: 0px;
+     list-style : none;
+     cursor : pointer;
+  }
+  #homeBtn{
+  	padding: 10px 0px 10px 0;
+  	cursor: pointer;
+  	color: #ffffff;
+  	background: linear-gradient(#007399, #00bfff);
+  }
+  .button {
+     padding: 0px;
+     width: 100%;
+     height: 40px;
+     border: none;
+     position: relative;
+     color: #999999;
+     background-color: #ffffff;
+     font-size: 20px;
+     transition-duration: 0.2s;
+     overflow: hidden;
+     font-weight: bold;
+     text-shadow: 0px 0px 1px #000000;
+  }
+  .button:hover {
+     cursor: pointer;
+     color: #ffffff!important;
+     background: #999999!important;
+     border-left: 6px solid #ffcc99!important;
+     box-shadow: 1px 5px 20px 1px rgba(0,0,0,0.3);
+     transform: scale(1.05, 1);
+     z-index: 100;
+  }
+  .button:active {
+     transform: translateY(2px);
+  }
+  .button:focus {
+     color: #ffffff;
+     background-color: #ffcc99;
+     font-weight: bold;
+     opacity: 1;
+     transition: 1s
+     font-size: 30px;
+     box-shadow: 1px 5px 20px 1px rgba(0,0,0,0.3);
+     transform: scale(1.05, 1);
+     z-index: 99;
+  }
+  .selected {
+     color: #ffffff!important;
+     background-color: #cccccc!important;
+     border-left: 6px solid #ffcc99!important;
+     transform: scale(1.05, 1);
+  }
+  .selectedParent {
+     color: #ffffff;
+     background-color: #999999;
+  }
+</style>
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script type="text/javascript">
+var jsonObj = {
+          "paran":[
+                 { "id" : "1000", "pid" : "", "name" : "병아리반"},
+                 { "id" : "1100", "pid" : "1000", "name" : "1조"},
+                 { "id" : "1110", "pid" : "1100", "name" : "김현진"},
+                 { "id" : "1111", "pid" : "1110", "name" : "상남자"},
+                 { "id" : "1120", "pid" : "1100", "name" : "김대성"},
+                 { "id" : "1130", "pid" : "1100", "name" : "최주혁"},
+                 { "id" : "1140", "pid" : "1100", "name" : "김현우"},
+                 { "id" : "1200", "pid" : "1000", "name" : "2조"},
+                 { "id" : "1210", "pid" : "1200", "name" : "안효렬"},
+                 { "id" : "1220", "pid" : "1200", "name" : "이경원"},
+                 { "id" : "1230", "pid" : "1200", "name" : "박정호"},
+                 { "id" : "1240", "pid" : "1200", "name" : "강태현"},
+                 { "id" : "1300", "pid" : "1000", "name" : "3조"},
+                 { "id" : "1310", "pid" : "1300", "name" : "박성현"},
+                 { "id" : "1320", "pid" : "1300", "name" : "이은채"},
+                 { "id" : "1330", "pid" : "1300", "name" : "이지훈"},
+                 { "id" : "1340", "pid" : "1300", "name" : "이주상"},
+                 { "id" : "1350", "pid" : "1300", "name" : "박창근"},
+                 { "id" : "1400", "pid" : "1000", "name" : "4조"},
+                 { "id" : "1410", "pid" : "1400", "name" : "김지원"},
+                 { "id" : "1420", "pid" : "1400", "name" : "김세움"},
+                 { "id" : "1430", "pid" : "1400", "name" : "박유진"},
+                 { "id" : "1440", "pid" : "1400", "name" : "이유인"},
+
+                 { "id" : "2000", "pid" : "", "name" : "기린반"},
+                 { "id" : "2100", "pid" : "2000", "name" : "1조"},
+                 { "id" : "2110", "pid" : "2100", "name" : "신비"},
+                 { "id" : "2120", "pid" : "2100", "name" : "유주"},
+                 { "id" : "2130", "pid" : "2100", "name" : "은하"},
+                 { "id" : "2200", "pid" : "2000", "name" : "2조"},
+                 { "id" : "2210", "pid" : "2200", "name" : "소원"},
+                 { "id" : "2220", "pid" : "2200", "name" : "엄지"},
+                 { "id" : "2230", "pid" : "2200", "name" : "약지"},
+
+                 { "id" : "3000", "pid" : "", "name" : "사자반"},
+                 { "id" : "3100", "pid" : "3000", "name" : "1조"},
+                 { "id" : "3110", "pid" : "3100", "name" : "조석"},
+                 { "id" : "3120", "pid" : "3100", "name" : "애봉이"},
+                 { "id" : "3130", "pid" : "3100", "name" : "힙제이"},
+                 { "id" : "3200", "pid" : "3000", "name" : "2조"},
+                 { "id" : "3210", "pid" : "3200", "name" : "유미"},
+                 { "id" : "3220", "pid" : "3200", "name" : "야부리"},
+                 { "id" : "3230", "pid" : "3200", "name" : "왕자림"}
+            ]
+          };
+$(document).ready(function(){
+   $("#main").createDiv();
+});
+
+(function ( $ ) {
+   $.fn.createDiv = function(){
+      return this.each(function(){
+         var $this = this
+
+         var homeDiv = $("<div/>",{
+            id : "homeBtn",
+            text : "아코디언메뉴▲",
+            click : homeHandler
+         });
+         homeDiv.appendTo($this);
+
+         var firstNodes = findChildNodes("");
+         var firstUl = $('<ul/>');
+         firstUl.appendTo($this);
+
+         for(var i=0; i<firstNodes.length; i++){
+             var firstLi =  $('<li/>')
+             firstLi.appendTo(firstUl);
+             var firstDiv = $('<input/>',{
+                type : "button",
+                id : firstNodes[i]["id"],
+                value : firstNodes[i]["name"],
+                click : handler,
+                class : "button",
+             });
+             firstDiv.appendTo(firstLi);
+         }
+
+          function findChildNodes(pId){
+             var paranArr = jsonObj['paran'];
+             var foundNodes = [];
+             for (var i = 0; i < paranArr.length; i++) {
+                if (pId == paranArr[i]['pid']) {
+                   foundNodes.push(paranArr[i]);
+                }
+             }
+             return foundNodes;
+          }
+
+          function handler(){
+            createRoot($(this));
+            var ulMenu = $(this).next();
+            ulMenu.slideToggle("fast");
+            ulMenu.find("ul").slideUp("fast");
+            ulMenu.parent().siblings().find("ul").slideUp("fast");
+            $(this).siblings().find("input").addClass("selected");
+            $(this).parent().siblings().find("input").removeClass("selected");
+            $(this).removeClass("selected");
+            $(this).addClass("selectedParent");
+            $(this).parent().siblings().find("input:first").removeClass("selectedParent");
+          }
+
+          function createRoot($this){
+             $this.parent().find("ul").remove();
+             var rootNodes = findChildNodes($this.attr("id"));
+             var rootUl = $("<ul/>");
+             rootUl.addClass("hide");
+             for(var i=0; i<rootNodes.length; i++){
+                var rootLi = $("<li/>");
+                rootLi.appendTo(rootUl);
+                var rootDiv = $('<input/>',{
+                   type : "button",
+                   id : rootNodes[i]["id"],
+                   value : rootNodes[i]["name"],
+                   click : handler,
+                   class : "button"
+                });
+                rootDiv.appendTo(rootLi);
+             }
+             rootUl.appendTo($this.parent());
+          }
+
+          function homeHandler(){
+             $(this).parent().children().find("ul").slideUp("fast");
+             $(this).parent().children().find("input").removeClass("selectedParent");
+          }
+
+      });
+   };
+}( jQuery ));
+</script>
+</head>
+<body>
+   <div id="main">
+   </div>
+</body>
+</html>

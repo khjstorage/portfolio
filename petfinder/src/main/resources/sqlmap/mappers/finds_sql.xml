@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="finds">
+
+   <resultMap id="findsResultMap" type="com.petfinder.vo.FindsVO">
+      <id property="idx" column="F_IDX" />
+      <id property="name" column="F_NAME" />
+      <id property="pwd" column="F_PASSWORD" />
+      <id property="phone" column="F_PHONE" />
+      <id property="dog" column="F_DOG" />
+      <id property="size" column="F_SIZE" />
+      <id property="color" column="F_COLOR" />
+      <id property="gender" column="F_GENDER" />
+      <id property="date" column="F_DATE" />
+      <id property="region" column="F_REGION" />
+      <id property="title" column="F_TITLE" />
+      <id property="detail" column="F_DETAIL" />
+   </resultMap>
+
+	<insert id="insertFinds" parameterType="findsVO" useGeneratedKeys="true" keyProperty="IDX">
+		<selectKey keyProperty="idx" resultType="string" order="BEFORE">
+	     SELECT
+	     	SEQ_FINDS_IDX.NEXTVAL
+	     FROM
+	     	DUAL
+		</selectKey>
+		<![CDATA[
+	    INSERT INTO
+	   		FINDS(F_IDX, F_NAME, F_PASSWORD, F_PHONE, F_DOG, F_SIZE, F_COLOR, F_GENDER, F_DATE, F_REGION, F_TITLE, F_DETAIL)
+	    VALUES
+	   		(#{idx}, #{name}, #{pwd}, #{phone}, #{dog}, #{size}, #{color}, #{gender}, #{date}, #{region}, #{title}, #{detail})
+	   ]]>
+   </insert>
+
+   <insert id="insertFindsFile" parameterType="hashmap">
+       <![CDATA[
+         INSERT INTO
+         	FINDS_FILE(F_FILE_IDX, F_BOARD_IDX, F_ORIGINAL_FILE_NAME, F_STORED_FILE_NAME, F_FILE_SIZE) 
+         VALUES
+         	(SEQ_FINDS_FILE_IDX.NEXTVAL, #{F_BOARD_IDX}, #{F_ORIGINAL_FILE_NAME}, #{F_STORED_FILE_NAME}, #{F_FILE_SIZE})
+       ]]>
+   </insert>
+
+
+   <select id="selectBoardDetail" parameterType="String" resultType="hashmap">
+	   <![CDATA[
+	       SELECT
+	       		A.*, TO_CHAR(F_DATE, 'YYYY-MM-DD')F_DATE_1
+	       FROM 
+	       		FINDS A
+	       WHERE
+	       		F_IDX = #{idx} 
+	   ]]>
+   </select>
+
+   <select id="selectBoardDetailFile" parameterType="hashmap" resultType="hashmap">
+    <![CDATA[
+        SELECT
+        	F_FILE_IDX,
+            F_BOARD_IDX,
+            F_ORIGINAL_FILE_NAME,
+            ROUND(F_FILE_SIZE/1024,1) AS F_FILE_SIZE
+        FROM
+            FINDS_FILE
+        WHERE
+            F_BOARD_IDX = #{idx}
+    ]]>
+   </select> 
+   
+   	<select id="selectFileInfo" parameterType="hashmap" resultType="hashmap">
+    <![CDATA[
+        SELECT
+            F_STORED_FILE_NAME,
+            F_ORIGINAL_FILE_NAME
+        FROM
+            FINDS_FILE
+        WHERE
+            F_BOARD_IDX = #{idx}
+    ]]>
+	</select>
+
+   <select id="deleteFinds" parameterType="String">
+    <![CDATA[
+        DELETE
+        FROM
+        	FINDS
+        WHERE
+        	F_IDX = #{idx}
+    ]]>
+   </select>
+
+   <select id="deleteFindsFile" parameterType="String">
+    <![CDATA[
+        DELETE
+        FROM
+        	FINDS_FILE
+        WHERE
+        	F_BOARD_IDX = #{idx}
+    ]]>
+   </select>
+   
+   <select id="matchFinds" parameterType="disappearanceVO" resultType="hashmap">
+		<![CDATA[
+  		SELECT
+			*
+		FROM 
+			FINDS A
+      	FULL OUTER JOIN  (SELECT 
+                          F_BOARD_IDX,
+                          F_STORED_FILE_NAME
+                        FROM  FINDS_FILE ) B
+        ON A.F_IDX = B.F_BOARD_IDX 
+		WHERE
+			F_COLOR=#{color} AND F_DOG=#{dog} AND F_GENDER=#{gender} AND F_SIZE=#{size}
+		ORDER BY
+			TO_NUMBER(F_IDX) DESC
+		]]>
+	</select>
+
+	<update id="updateFinds" parameterType="findsVO">
+		<![CDATA[
+		UPDATE
+			FINDS
+		SET 
+			F_NAME = #{name},
+			F_PASSWORD = #{pwd},
+			F_PHONE = #{phone},
+			F_DOG = #{dog},
+			F_SIZE = #{size},
+			F_COLOR = #{color},
+			F_GENDER = #{gender},
+			F_DATE = #{date},
+			F_REGION = #{region},
+			F_TITLE = #{title},
+			F_DETAIL = #{detail}
+		WHERE
+			F_IDX = #{idx}
+		]]>
+	</update>
+		
+	<update id="updateFindsFile" parameterType="hashmap">
+		<![CDATA[
+		MERGE INTO FINDS_FILE
+		USING DUAL
+		ON (F_BOARD_IDX = #{F_BOARD_IDX})
+		WHEN MATCHED THEN
+             UPDATE SET
+                  F_ORIGINAL_FILE_NAME = #{F_ORIGINAL_FILE_NAME},
+                  F_STORED_FILE_NAME = #{F_STORED_FILE_NAME},
+                  F_FILE_SIZE =  #{F_FILE_SIZE}
+		WHEN NOT MATCHED THEN
+             INSERT(F_FILE_IDX, F_BOARD_IDX, F_ORIGINAL_FILE_NAME, F_STORED_FILE_NAME, F_FILE_SIZE) 
+             VALUES(SEQ_FINDS_FILE_IDX.NEXTVAL, #{F_BOARD_IDX}, #{F_ORIGINAL_FILE_NAME}, #{F_STORED_FILE_NAME}, #{F_FILE_SIZE})
+            ]]>
+	</update>
+	
+	<select id="passwordAuth" parameterType="hashmap" resultType="String">
+    	<![CDATA[
+    	SELECT
+    		F_PASSWORD
+    	FROM
+    		FINDS
+    	WHERE
+    		F_PASSWORD=#{pwd} AND F_IDX=#{idx}
+    ]]>
+	</select>
+	
+
+	<select id="findsList" parameterType="findsVO" resultType="hashmap">
+	   	<![CDATA[
+			SELECT 
+			  *
+			FROM
+			  (SELECT 
+			    *
+			  FROM
+			    FINDS
+			  ORDER BY
+			    TO_NUMBER(F_IDX) DESC) A
+			FULL OUTER JOIN  (SELECT 
+                     F_BOARD_IDX,
+                     F_STORED_FILE_NAME
+                    FROM
+                      FINDS_FILE ) B
+                ON A.F_IDX = B.F_BOARD_IDX
+			WHERE
+			  ROWNUM <= 4
+	    ]]>
+   	</select>		
+		
+	<select id="postCount" resultType="java.lang.Integer">
+		<![CDATA[
+		SELECT
+			NVL(COUNT(*),0) count
+		FROM 
+			FINDS
+		]]>
+	</select>	
+	
+	
+			
+	<select id="searchPostCount" resultType="java.lang.Integer">
+		<![CDATA[
+		SELECT
+			NVL(COUNT(*),0) count
+		FROM 
+			FINDS
+		WHERE
+		]]>
+			<choose>
+			    <when test="selection_search == 'title'">
+			       UPPER(F_TITLE) like UPPER('%' ||  #{keyWord_search} || '%')
+			    </when>
+			    <when test="selection_search == 'contents'">
+			       UPPER(F_DETAIL) like UPPER('%' ||  #{keyWord_search} || '%')
+			    </when>
+			    <otherwise>
+			       UPPER(F_TITLE) like UPPER('%' ||  #{keyWord_search} || '%') OR UPPER(F_DETAIL) like UPPER('%' ||  #{keyWord_search} || '%')
+			    </otherwise>
+			</choose>
+	</select>	
+	
+	
+	
+	<select id="getBoardList" resultType="hashmap" parameterType="PagingVO">
+		<![CDATA[
+		SELECT
+			*
+		FROM
+			(SELECT 
+				ROWNUM rnum,
+				A.*
+			FROM 
+				(SELECT * FROM FINDS ORDER BY TO_NUMBER(F_IDX) DESC) A
+			WHERE 
+				ROWNUM <= #{endRowNum}) B
+        FULL OUTER JOIN  (SELECT 
+                     F_BOARD_IDX,
+                     F_STORED_FILE_NAME
+                    FROM
+                      FINDS_FILE ) C
+                ON B.F_IDX = C.F_BOARD_IDX
+		WHERE 
+			rnum >= #{startRowNum}
+		]]>
+	</select>
+	
+	
+	<select id="searchFinds" parameterType="hashmap" resultType="hashmap">
+ 		<![CDATA[
+ 		SELECT
+			*
+		FROM
+			(SELECT 
+				ROWNUM rnum,
+				A.*
+			FROM 
+				(SELECT
+	 				*
+				FROM
+			 		FINDS
+				WHERE
+					]]>
+					<choose>
+					    <when test="selection_search == 'title'">
+					       UPPER(F_TITLE) like UPPER('%' ||  #{map.keyWord_search} || '%')
+					    </when>
+					    <when test="selection_search == 'contents'">
+					       UPPER(F_DETAIL) like UPPER('%' ||  #{map.keyWord_search} || '%')
+					    </when>
+					    <otherwise>
+					       UPPER(F_TITLE) like UPPER('%' ||  #{map.keyWord_search} || '%') OR UPPER(F_DETAIL) like UPPER('%' ||  #{map.keyWord_search} || '%')
+					    </otherwise>
+					</choose>
+				<![CDATA[
+				ORDER BY
+					TO_NUMBER(F_IDX) DESC) A
+					WHERE 
+						ROWNUM <= #{pagingVO.endRowNum}) B
+		        FULL OUTER JOIN  (SELECT 
+		                     F_BOARD_IDX,
+		                     F_STORED_FILE_NAME
+		                    FROM
+		                      FINDS_FILE ) C
+		                ON B.F_IDX = C.F_BOARD_IDX
+		WHERE 
+			rnum >= #{pagingVO.startRowNum}
+		]]>
+	</select>
+		
+</mapper>
+

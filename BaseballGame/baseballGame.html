@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>신나는 야구게임</title>
+<link rel="stylesheet" type="text/css" href="./style.css">
+<script>
+var outputNumValue = [];
+var inputNumValue = [];
+
+//초기값 설정
+function setValueinit(){
+   var inputNum = document.getElementsByClassName("inputBox");
+   for(var i=0; i<3; i++){
+     inputNum[i].value = "";
+   }
+   document.getElementById("answerBtn").disabled = false;
+   document.getElementById("inputBoxOne").focus();
+}
+function setNumberinit(){
+   var outputNum = document.getElementsByClassName("randomBox");
+   var randomNum = [];
+   var temp;
+   var rnum;
+   for(var i=0; i<=9; i++){
+       randomNum.push(i);
+   }
+   for(var i=0; i< randomNum.length ; i++){
+       rnum = Math.floor(Math.random() * 10);
+       temp = randomNum[i];
+       randomNum[i] = randomNum[rnum];
+       randomNum[rnum] = temp;
+   }
+   for(var i=0; i<3; i++){
+      outputNumValue[i]=randomNum.pop();
+      outputNum[i].innerHTML = "?";
+      console.log(outputNumValue[i]);
+   }
+}
+
+//게임시작(2분)
+var SetTime = 120;
+function timerStart(){
+	setNumberinit();
+	setValueinit();
+	document.getElementById("gameCntBtn").disabled = true;
+	document.getElementById("gameCntBtn").style.display="none";
+	document.getElementById("gameTimeBtn").style.display="none";
+	document.getElementById("restartBtn").style.display="inline-block";
+	tid=setInterval('timer_game()',1000);
+}
+function timer_game() {
+	var time = Math.floor(SetTime / 60) + "분 " + (SetTime % 60) + "초";
+	var msg = "현재 남은 시간은 <font color='red'>" + time + "</font> 입니다.";
+	document.getElementById('timer').innerHTML = msg;
+	SetTime--;
+	if(SetTime < 0) {
+	clearInterval(tid);
+	alert("홈런실패(시간초과)");
+	window.location.reload();
+	}
+}
+
+//게임시작(10번)
+var cnt = 11;
+function counterStart(){
+	setNumberinit();
+	setValueinit();
+	document.getElementById("gameTimeBtn").disabled = true;
+	document.getElementById("gameCntBtn").style.display="none";
+	document.getElementById("gameTimeBtn").style.display="none";
+	document.getElementById("restartBtn").style.display="inline-block";
+	counting();
+}
+function counting(){
+	cnt = cnt - 1;
+	var msg = "현재 남은 기회 <font color='red'>" + cnt + "번 </font> 남았습니다.";
+	document.getElementById('timer').innerHTML = msg;
+	if(cnt==0){
+	alert("홈런실패(기회초과)");
+	window.location.reload();
+	}
+}
+
+//함수
+function nextFocusMove(pThis, pNext, pNum){
+	if (pThis.value.length==pNum)
+	  pNext.focus();
+}
+function restart(){
+	window.location.reload();
+}
+
+//유효성검사
+function validateBlank(){
+	var inputNum = document.getElementsByClassName("inputBox");
+	for(var i=0; i<3; i++){
+	inputNumValue[i] = inputNum[i].value;
+	}
+	if(inputNumValue[0] == "" || inputNumValue[1] == "" || inputNumValue[2] == ""){
+	return true;
+	}
+	return false;
+}
+function validateSame(){
+	var inputNum = document.getElementsByClassName("inputBox");
+	for(var i=0; i<3; i++){
+	inputNumValue[i] = inputNum[i].value;
+	}
+	if(inputNumValue[0] == inputNumValue[1] || inputNumValue[1] == inputNumValue[2] || inputNumValue[0] == inputNumValue[2]){
+	return true;
+	}
+	return false;
+}
+function validateChar(){
+	var inputNum = document.getElementsByClassName("inputBox");
+	for(var i=0; i<3; i++){
+	inputNumValue[i] = inputNum[i].value;
+	}
+	if(isNaN(inputNumValue[0]) == true || isNaN(inputNumValue[1]) == true || isNaN(inputNumValue[2]) == true){
+	return true;
+	}
+	return false;
+}
+
+function answer(){
+	var strike = 0;
+	var ball = 0;
+	var out = 3;
+	var inputNum = document.getElementsByClassName("inputBox");
+	var outputNum = document.getElementsByClassName("randomBox");
+	var billboard = document.getElementById("statusBox");
+
+	for(var i=0; i<3; i++){
+	inputNumValue[i] = inputNum[i].value;
+	}
+
+	if(validateBlank()==true || validateSame()==true || validateChar()==true){
+	for(var i=0; i<3; i++){
+	  inputNum[i].value = "";
+	}
+	billboard.innerHTML += "같은숫자 혹은 빈칸 혹은 문자를 입력했습니다.</br>"
+	}else{
+	for(var i=0; i<3; i++){
+	  for(var j=0; j<3; j++){
+		if(outputNumValue[i] == inputNumValue[j] && i==j)
+		  strike++;
+		if(outputNumValue[i] == inputNumValue[j] && i!=j)
+		  ball++;
+	  }
+	}
+	out = out - (strike + ball);
+
+	if(strike==3){
+	  alert("홈런입니다.");
+	  window.location.reload();
+	}else{
+	  billboard.innerHTML += inputNumValue[0]+","+inputNumValue[1]+","+inputNumValue[2]+"은(는) ";
+	  billboard.innerHTML += strike+"스트라이크,"+ball+"볼,"+out+"아웃 입니다.<br/>";
+		for(var i=0; i<3; i++){
+		  inputNum[i].value = "";
+		}
+		if(document.getElementById("gameCntBtn").disabled==false){
+		  counting();
+		}
+	}
+	}
+	inputNum[0].focus();
+
+	var divScroll = document.getElementById("statusBox");
+	divScroll.scrollTop = divScroll.scrollHeight;
+}
+</script>
+</head>
+
+<body>
+  <div id="wrap">
+      <h1>즐거운 야구게임</h1>
+      <button id="gameTimeBtn" type="button" onclick="timerStart()">게임시작(2분)</button>
+      <button id="gameCntBtn"  type="button" onclick="counterStart()">게임시작(10번)</button>
+      <button id="restartBtn"  type="button" onclick="restart()">재시작</button>
+      <p id="timer">게임시작 버튼을 눌러주세요</p>
+      <div id="randomBoxWrap">
+        <div class="randomBox"></div>
+        <div class="randomBox"></div>
+        <div class="randomBox"></div>
+      </div>
+      <div id="statusBox"></div>
+      <form name="inputForm">
+        <fieldset>
+          <legend>각자 다른 숫자 3개를 중복없이 입력해주세요.</legend>
+          <input class="inputBox" id="inputBoxOne"   type="text" placeholder="0" maxlength="1" onkeyup="nextFocusMove(this, inputBoxTwo, 1)"  >
+          <input class="inputBox" id="inputBoxTwo"   type="text" placeholder="0" maxlength="1" onkeyup="nextFocusMove(this, inputBoxThree, 1)">
+          <input class="inputBox" id="inputBoxThree" type="text" placeholder="0" maxlength="1" onkeyup="nextFocusMove(this, answerBtn, 1)"    >
+          <button id="answerBtn" type="button" disabled onclick="answer()">입력</button>
+        </fieldset>
+      </form>
+  </div>
+</body>
+</html>

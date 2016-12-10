@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>ImageSlider</title>
+<script type="text/javascript">
+window.onload = function() {
+	PhotoBook();
+}
+
+var PhotoBook = function() {
+	if(!(this instanceof PhotoBook)){
+		return new PhotoBook();
+	}
+
+	var imgArr = ["0.jpg","1.jpg","2.jpg","3.jpg","4.jpg","5.jpg","6.jpg","7.jpg","8.jpg","9.jpg"];
+
+	(function(){
+		wrap.innerHTML += '<div id="imgWrap">'
+		wrap.innerHTML += '<span id="spanTag">1</span><hr/>'
+		wrap.innerHTML += '<img id="imgTag" src="./img/0.jpg" height="580" width="580" />'
+		wrap.innerHTML += '</div>'
+		wrap.innerHTML += '<div id="buttonWrap">'
+		wrap.innerHTML += '<button id="prevButton" type="button" name="button" value="◀">◀</button>'
+		wrap.innerHTML += '<input id="inputText" type="number" value="1" min="1" max="10">'
+		wrap.innerHTML += '<button id="nextButton" type="button" name="button" value="▶">▶</button>'
+		wrap.innerHTML += '</div>'
+
+		var buttonList = document.getElementsByTagName('button');
+		
+		for(var i=0; i<buttonList.length; i++){
+			buttonList[i].onclick = changeHandler;
+		}
+		
+		var textValue = document.getElementById('inputText');
+		textValue.onchange = onChangeHandler;
+		document.getElementById('prevButton').disabled = true;
+	})();
+
+	function changeHandler(){
+		var eventTargetId = this.id;
+		var spanTag = document.getElementById('spanTag');			
+		var n = Number(spanTag.innerHTML);
+		var imgTag = document.getElementById('imgTag');				
+		var inputTextTag = document.getElementById('inputText');	
+		var m = Number(inputTextTag.value);
+		document.getElementById('prevButton').disabled = false;
+		document.getElementById('nextButton').disabled = false;
+
+		if(eventTargetId=="prevButton"){
+			if(m!=1){
+				spanTag.innerHTML = (n - 1); 		
+				imgTag.src = "./img/"+imgArr[n-2];	
+				inputTextTag.value = (m - 1);		
+				if(m==2){
+					document.getElementById('prevButton').disabled = true;
+				}
+			}
+		}else{
+			if(m!=imgArr.length){
+				spanTag.innerHTML = (n + 1);
+				imgTag.src = "./img/"+imgArr[n];
+				inputTextTag.value = (m + 1);
+				if(m==imgArr.length-1){
+					document.getElementById('nextButton').disabled = true;
+				}
+			}
+		}
+	}
+
+	function onChangeHandler(){
+		document.getElementById('prevButton').disabled = false;
+		document.getElementById('nextButton').disabled = false;
+		var pValue = document.getElementById('inputText').value;
+		if(pValue>=1 && pValue<=imgArr.length){
+			spanTag.innerHTML = pValue;
+			imgTag.src = "./img/"+imgArr[pValue-1];
+		}else{
+			imgTag.src = "./img/"+imgArr[pValue-1];
+		}
+		if(pValue==1){
+			document.getElementById('prevButton').disabled = true;
+		}else if(pValue==10){
+			document.getElementById('nextButton').disabled = true;
+		}
+	}
+}
+</script>
+</head>
+<body>
+    <div id="wrap" align="center"></div>
+</body>
+</html>

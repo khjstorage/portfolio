@@ -1,0 +1,222 @@
+body {
+	background-color: #ebebeb;
+}
+::-webkit-scrollbar {
+	border: 3px solid #ffffff;
+	width: 8px; height: 8px;
+}
+::-webkit-scrollbar-track {
+	-webkit-border-radius: 10px;
+	border-radius: 10px;
+	background: #cccccc;
+}
+::-webkit-scrollbar-thumb {
+	-webkit-border-radius: 8px;
+	border-radius: 8px;
+	height: 50px; width: 50px;
+	background: rgba(20, 138, 235,0.7);
+}
+div, input, button, table {
+	position: relative;
+	margin: 0;
+	border: none;
+	padding: 0;
+	outline: none;
+	font-family: 'sans-serif';
+	font-size: 20px;
+	font-weight: bold;
+	text-align: center;
+	vertical-align: middle;
+	color: #666666;
+	background-color: #ffffff;
+	transition: 0.1s;
+}
+input:hover {
+	background-color: #f2f2f2;
+}
+input:focus {
+	color: #148aeb;
+	background-color: #f2f2f2;
+}
+button {
+	color: #148aeb;
+}
+button:active {
+	font-size: 15px;
+}
+button:hover {
+	background-color: #f2f2f2;
+}
+div > h1 {
+	margin: 0;
+	font-size: 27px;
+	line-height: 59px;
+}
+div > h2 {
+	margin: 0;
+	font-size: 20px;
+	line-height: 59px;
+}
+.title {
+	margin: 25px auto;
+	border-radius: 20px;
+	width: 270px; height: 200px;
+	box-shadow: 1px 5px 20px 1px rgba(0,0,0,0.3);
+}
+.adminPage {
+	margin: 25px auto;
+	border-radius: 20px;
+	width: 270px; height: 245px;
+	box-shadow: 1px 5px 20px 1px rgba(0,0,0,0.3);
+}
+.Obj {
+	border-top: 1px solid #cccccc;
+	width: 100%; height: 45px;
+	line-height: 45px;
+}
+.main {
+	margin: 25px auto;
+	border-radius: 20px;
+	width: 270px; height: 480px;
+	box-shadow: 1px 5px 20px 1px rgba(0,0,0,0.3);
+}
+.attCheckDiv {
+	position: absolute;
+	top: 61px;	left: 0;
+	border-top: 1px solid #cccccc;
+	width: 100%; height: 368px;
+	overflow: auto;
+	overflow-x: hidden;
+}
+.checkTable {
+	border-collapse: collapse;
+	font-size: 15px;
+}
+.checkTable td {
+	padding: 0;
+}
+.checkTable > thead {
+	visibility:hidden;
+	padding: 0;
+	height: 0;
+	line-height:0;
+}
+.checkTable tbody:nth-child(2n-1) tr:first-child {
+	background-color: #fbd0d0;
+}
+.checkTable tbody:nth-child(2n-1) {
+	background-color: #fde8e8;
+}
+.checkTable tbody:nth-child(2n) tr:first-child {
+	background-color: #d0e8fb;
+}
+.checkTable tbody:nth-child(2n) {
+	background-color: #e8f3fd;
+}
+.disButton {
+	color: #ffffff!important;
+	background-color: #c8c8c8!important;
+}
+.po {
+	position: absolute;
+	top: 105px; left: 0;
+	width: 100%;
+}
+.radioArea1{
+	border-top: 1px solid #cccccc;
+	padding-top: 8px;
+	width: 100%; height: 38px;
+}
+.radioArea2{
+	border-top: 1px solid #cccccc;
+	padding: 10px 40px 0 10px;
+	width: 220px; height: 32px;
+}
+.leftTopArea{
+	position: absolute;
+	left: 0; top: 59px;
+	border-top: 1px solid #cccccc;
+	width: 60%; height: 45px;
+}
+.rightTopArea{
+	position: absolute;
+	right: 0; top: 59px;
+	z-index: 100;
+	border-top: 1px solid #cccccc;
+	border-left: 1px solid #cccccc;
+	width: 40%; height: 46px;
+}
+.leftArea {
+	position: absolute;
+	left: 0; bottom: 50px;
+	border-top: 1px solid #cccccc;
+	width: 50%;	height: 45px;
+}
+.rightArea {
+	position: absolute;
+	right: 0; bottom: 50px;
+	border-top: 1px solid #cccccc;
+	border-left: 1px solid #cccccc;
+	width: 50%;	height: 45px;
+}
+.leftBottomArea {
+	position: absolute;
+	left: 0; bottom: 0;
+	border-radius: 0 0 0 20px;
+	border-top: 1px solid #cccccc;
+	width: 50%; height: 50px;
+}
+.rightBottomArea {
+	position: absolute;
+	right: 0; bottom: 0;
+	border-radius: 0 0 20px 0;
+	border-top: 1px solid #cccccc;
+	border-left: 1px solid #cccccc;
+	width: 50%; height: 50px;
+}
+.bottomArea {
+	position: absolute;
+	left: 0; bottom: 0;
+	border-radius: 0 0 20px 20px;
+	border-top: 1px solid #cccccc;
+	width: 100%; height: 50px;
+	color: #148aeb;
+}
+.monthAttArea {
+	position: relative;
+	border-top: 1px solid #cccccc;
+	width: 100%; height: 45px;
+}
+.selMonth {
+	position: absolute;
+	top: 0; left: 0;
+	z-index: 99;
+	width: 70%;	height: 45px;
+}
+.monthAttButton {
+	position: absolute;
+	top: 0; right: 0;
+	z-index: 100;
+	border-left: 1px solid #cccccc;
+	width: 30%; height: 100%;
+}
+
+.userMonthAttTable {
+	position: absolute;
+	top: 105px; left: 0;
+	border-top: 1px solid #cccccc;
+	width: 100%; height: 44px;
+	line-height: 22px;
+	overflow: auto;
+	overflow-x: hidden;
+}
+
+.adminMonthAttTable {
+	position: absolute;
+	top: 105px; left: 0;
+	border-top: 1px solid #cccccc;
+	width: 100%; height: 324px;
+	line-height: 22px;
+	overflow: auto;
+	overflow-x: hidden;
+}

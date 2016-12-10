@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>AccordionMenu Plugin</title>
+<style>
+	ul {
+	  display: block;
+	  list-style-type: none;
+	  cursor: Pointer;
+	  padding: 0px;
+	}
+	div{
+	  border-radius: 10px;
+	}
+	.hide{
+	display: none
+	}
+	.first{
+	background-color: orange;
+	}
+	.second{
+	background-color: red;
+	}
+	.third{
+	background-color: green;
+	}
+	.fourth{
+	  background-color: brown;
+	}
+	#target {
+		width: 400px;
+		padding: 0px;
+		margin: 0px auto;
+		position: relative;
+		text-align: center;
+		font-size: 30px;
+		box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+	}
+	ul>li>div {
+	  padding: 0px;
+	  width: 100%;
+	  height: 40px;
+	  border: none;
+	  position: relative;
+	  color: #999999;
+	  background-color: #ffffff;
+	  font-size: 20px;
+	}
+	ul>li>div:hover {
+	  cursor: pointer;
+	  color: #ffffff;
+	  background: #999999;
+	}
+	ul>li>div:active {
+	  transform: translateY(2px);
+	}
+	ul>li>div:focus {
+	  color: #ffffff;
+	  background-color: #999999;
+	}
+</style>
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script>
+
+(function($){
+  jQuery.fn.extend({
+  accordion : function(){
+          return this.each(function(){
+            $("ul:not(:first)").addClass("hide");
+            $(this).on("click", function(){
+              $(this).next().slideToggle().parent().siblings().find("ul").slideUp();
+            });
+          });
+        }
+  });
+}(jQuery));
+
+$(function(){
+  $("#target div").accordion();
+});
+
+</script>
+</head>
+<body>
+<div id = "target">
+  <ul>
+   <li><div class = "first">News(first)</div>
+     <ul>
+       <li><div class = "second">News Item #1(second)</div>
+         <ul>
+           <li><div class = "third">News Item #1a(third)</div></li>
+           <li><div class = "third">News Item #1a(third)</div></li>
+         </ul>
+       </li>
+       <li><div class = "second">News Item #2(second)</div>
+         <ul>
+           <li><div class = "third">News Item #2a(third)</div></li>
+           <li><div class = "third">News Item #2a(third)</div></li>
+         </ul>
+       </li>
+       <li><div class = "second">News Item #3(second)</div>
+         <ul>
+           <li><div class = "third">News Item #3a(third)</div></li>
+         </ul>
+       </li>
+      </ul>
+   </li>
+
+   <li><div class = "first">Update(first)</div>
+     <ul>
+       <li><div class = "second">Update#1(second)</div>
+         <ul>
+           <li><div class = "third"><a href="#">News Item #1a</a>(third)</div>
+              <ul>
+                <li><div class="fourth">고기</div></li>
+              </ul>
+           </li>
+           <li><div class = "third"><a href="#">News Item #1a</a>(third)</div></li>
+         </ul>
+       </li>
+       <li><div class = "second">Update#2(second)</div></li>
+       <li><div class = "second">Update#3(second)</div></li>
+     </ul>
+   </li>
+
+   <li><div class = "first">Miscellaneous(first)</div>
+     <ul>
+       <li><div class = "second">Misc. #1(second)</div>
+         <ul>
+           <li><div class = "third">Misc. #1a(third)</div></li>
+         </ul>
+       </li>
+       <li><div class = "second">Misc. #2(second)</div>
+         <ul>
+           <li><div class = "third">Misc. #2a(third)</div></li>
+         </ul>
+       </li>
+       <li><div class = "second">Misc. #2(second)</div>
+         <ul>
+           <li><div class = "third">Misc. #3a(third)</div></li>
+         </ul>
+       </li>
+     </ul>
+   </li>
+  </ul>
+</div>
+</body>
+</html>

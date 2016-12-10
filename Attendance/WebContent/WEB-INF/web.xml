@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+	id="WebApp_ID" version="3.1">
+	<display-name>Attendance</display-name>
+	<welcome-file-list>
+		<welcome-file>main.jsp</welcome-file>
+	</welcome-file-list>
+	<error-page>
+		<error-code>404</error-code>
+		<location>/error/404-error.jsp</location>
+	</error-page>
+	<filter>
+		<filter-name>setCharacterEncodingFilter</filter-name>
+		<filter-class>org.apache.catalina.filters.SetCharacterEncodingFilter</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>setCharacterEncodingFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+
+	<servlet>
+		<display-name>AttAdminInfoServlet</display-name>
+		<servlet-name>AttAdminInfoServlet</servlet-name>
+		<servlet-class>paran.servlet.AttAdminInfoServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>AttAdminInfoServlet</servlet-name>
+		<url-pattern>/AttAdminInfoServlet</url-pattern>
+	</servlet-mapping>
+
+
+
+	<servlet>
+		<display-name>AttUserInfoServlet</display-name>
+		<servlet-name>AttUserInfoServlet</servlet-name>
+		<servlet-class>paran.servlet.AttUserInfoServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>AttUserInfoServlet</servlet-name>
+		<url-pattern>/AttUserInfoServlet</url-pattern>
+	</servlet-mapping>
+
+
+
+
+	<servlet>
+		<display-name>ConfirmIdServlet</display-name>
+		<servlet-name>ConfirmIdServlet</servlet-name>
+		<servlet-class>paran.servlet.ConfirmIdServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ConfirmIdServlet</servlet-name>
+		<url-pattern>/ConfirmIdServlet</url-pattern>
+	</servlet-mapping>
+
+
+	<servlet>
+		<display-name>EntranceServlet</display-name>
+		<servlet-name>EntranceServlet</servlet-name>
+		<servlet-class>paran.servlet.EntranceServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>EntranceServlet</servlet-name>
+		<url-pattern>/EntranceServlet</url-pattern>
+	</servlet-mapping>
+
+
+	<servlet>
+		<display-name>ExitServlet</display-name>
+		<servlet-name>ExitServlet</servlet-name>
+		<servlet-class>paran.servlet.ExitServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ExitServlet</servlet-name>
+		<url-pattern>/ExitServlet</url-pattern>
+	</servlet-mapping>
+
+
+	<servlet>
+		<display-name>LoginProcServlet</display-name>
+		<servlet-name>LoginProcServlet</servlet-name>
+		<servlet-class>paran.servlet.LoginProcServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>LoginProcServlet</servlet-name>
+		<url-pattern>/LoginProcServlet</url-pattern>
+	</servlet-mapping>
+
+
+
+	<servlet>
+		<display-name>LogoutServlet</display-name>
+		<servlet-name>LogoutServlet</servlet-name>
+		<servlet-class>paran.servlet.LogoutServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>LogoutServlet</servlet-name>
+		<url-pattern>/LogoutServlet</url-pattern>
+	</servlet-mapping>
+
+
+
+	<servlet>
+		<display-name>MonthlyAdminViewsServlet</display-name>
+		<servlet-name>MonthlyAdminViewsServlet</servlet-name>
+		<servlet-class>paran.servlet.MonthlyAdminViewsServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>MonthlyAdminViewsServlet</servlet-name>
+		<url-pattern>/MonthlyAdminViewsServlet</url-pattern>
+	</servlet-mapping>
+
+
+
+	<servlet>
+		<display-name>MonthlyUserViewsServlet</display-name>
+		<servlet-name>MonthlyUserViewsServlet</servlet-name>
+		<servlet-class>paran.servlet.MonthlyUserViewsServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>MonthlyUserViewsServlet</servlet-name>
+		<url-pattern>/MonthlyUserViewsServlet</url-pattern>
+	</servlet-mapping>
+
+
+
+
+</web-app>

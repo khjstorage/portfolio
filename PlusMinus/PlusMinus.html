@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>PlusMinus</title>
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script type="text/javascript">
+var Handler =  function(){
+	var output = $("#outputNum").val();
+
+	function increment(){
+	output++;
+	$("#outputNum").val(output);
+	}
+	function decreament(){
+	output--;
+	$("#outputNum").val(output);
+	}
+	return{ inc : increment, dec : decreament }
+}
+$(document).ready(function() {
+	var obj = new Handler();
+	$(".Btn").on("click",function(e){
+	  e.preventDefault();
+	  if($(this).attr("id")=="increase"){
+		 obj.inc();
+	  }else{
+		 obj.dec();
+	  }
+	});
+});
+</script>
+</head>
+<body>
+   <div id="topDiv">
+      <div>
+         <input type="button" class="Btn" id="increase" value="증가"/>
+         <input type="button" class="Btn" id="decrease" value="감소"/>
+      </div>
+      <div>
+         <input id="outputNum" type="number" value="0"/>
+      </div>
+   </div>
+</body>
+</html>

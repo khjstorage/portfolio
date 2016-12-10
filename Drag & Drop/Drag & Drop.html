@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Drag & Drop</title>
+<link href="css/style.css" rel="stylesheet">
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
+<script>
+$(document).ready(function(){
+	$( ".drag" ).draggable({
+		cursor : "pointer",
+		helper : "clone"
+	});
+
+    $( ".drop" ).droppable({
+        drop: function(ev, ui){
+			$(this).animate({'background-color': ''}, 'slow');
+			var myIframe = "<iframe src='./item/" + ui.draggable.attr("id") + ".html' height=90% scrolling='no' marginwidth='0' marginheight='0' frameborder='no' ></iframe>";
+         	if(ev.target.firstElementChild === null){
+			    $("<span>", {
+        			id : ui.draggable.attr("id") + "-" + ui.draggable.text(),
+        			text : ui.draggable.text(),
+        			css : {
+        				margin : "0 auto",
+        				fontSize : "18pt",
+        				fontWeight : "bold",
+        				fontFamily : "맑은고딕"
+        			}
+        		}).appendTo($(this));
+
+        		$("<button>", {
+        			id : "delIframe",
+        			text:"X",
+        			click : function(){
+        				$(this).parent().empty();
+                		$("#"+ ui.draggable.attr("id")).fadeTo('',1);
+                		$("#"+ ui.draggable.attr("id")).draggable("enable");
+        			}
+        		}).appendTo($(this));
+
+        		$( this ).append(myIframe);
+        		$("#"+ ui.draggable.attr("id")).fadeTo('',0.5);
+        		$("#"+ ui.draggable.attr("id")).draggable("disable");
+         	}
+        },
+		
+		over: function(ev, ui){
+			if(ev.target.firstElementChild !== null){
+				$(this).css("background-color", "tomato");
+			}
+			else{
+				$(this).css("background-color", "powderblue");
+			}
+		},
+		
+		out: function(ev, ui){
+			$(this).css("background-color", "");
+		}
+
+    });
+});
+</script>
+</head>
+<body>
+	<div id="itemsDiv">
+		<ul id="items">
+			<li id="item1" class="drag">이미지</li>
+			<li id="item2" class="drag">URL</li>
+			<li id="item3" class="drag">동영상</li>
+			<li id="item4" class="drag">게임</li>
+		</ul>
+	</div>
+	<div id="tilesDiv">
+		<div id="tileDiv1" class="drop">
+		</div>
+		<div id="tileDiv2" class="drop">
+		</div>
+		<div id="tileDiv3" class="drop">
+		</div>
+		<div id="tileDiv4" class="drop">
+		</div>
+	</div>
+</body>
+</html>
