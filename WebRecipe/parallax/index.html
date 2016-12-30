@@ -1,0 +1,72 @@
+<!doctype html>
+<html>
+<head>
+   <link rel="stylesheet" href="reset.css">
+   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,400" rel="stylesheet">
+    <style>
+        body{
+            margin: 0;
+        }
+        .scen{
+            height: 100vh;
+            overflow: hidden;
+            background-attachment: fixed;
+            background-size: cover;
+            font-family: 'Source Sans Pro', sans-serif;
+            font-weight: 200;
+        }
+        .scen.one{
+            background-image: url(img/heic0910e.jpg);
+        }
+        .scen.two{
+            background-image: url(img/heic1501a.jpg);
+        }
+        .scen.three{
+            background-image: url(img/heic1608a.jpg);
+        }
+        .scen header{
+            color: white;
+            max-width: 80%;
+            position: relative;
+            left:50%;
+            top:50%;
+            transform: translateX(-50%) translateY(-50%);
+            font-size: 1.5rem;
+            text-align: center;
+        }
+        .scen header h1{
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            font-weight: 400;
+        }
+        .scen header h1:after{
+            content: '';
+            border-bottom:1px solid white;
+            width:10rem;
+            display: block;
+            margin: 0 auto;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <section class="scen one">
+        <header>
+            <h1>Lorem ipsum dolor sit amet.</h1>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Debitis modi beatae soluta tempora itaque velit tenetur enim fuga atque, sunt!
+        </header>
+    </section>
+    <section class="scen two">
+        <header>
+            <h1>Lorem ipsum dolor sit amet.</h1>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Debitis modi beatae soluta tempora itaque velit tenetur enim fuga atque, sunt!
+        </header>
+    </section>
+    <section class="scen three">
+        <header>
+            <h1>Lorem ipsum dolor sit amet.</h1>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Debitis modi beatae soluta tempora itaque velit tenetur enim fuga atque, sunt!
+        </header>
+    </section>        
+</body>
+</html>
