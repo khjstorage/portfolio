@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+<style type="text/css">
+	*{
+		margin:0;
+		padding:0;
+	}
+	
+	.wrap{
+		margin:50px;
+	}
+	
+	#prev, #next{
+		width:80px;
+		height:40px;
+	}
+	
+	div.banner{
+		margin-top:10px;
+		width:265px;
+		height:166px;
+		border:1px solid #000;
+		position:relative;
+		overflow:hidden;
+	}
+	
+	div.banner-container{
+		width:1325px;
+		position:absolute;
+		left:0;
+		top:0;
+	}
+	
+	div.banner-container img{
+		display:block;
+		float:left;
+		left:0;
+		top:0;
+		width:260px;
+	}
+</style>
+<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+<script type="text/javascript">
+	$(document).ready(function(){
+		var $banner = $(".banner-container");
+		var bannerLength = $banner.find("img").length;
+		var bannerWidth = $(".banner").width();  // 배너 하나의 너비 구하기
+		var currentIndex = 0;
+		
+		function showImage(index){
+			var left = -(index*bannerWidth);
+			
+			$banner.css("left", left);
+		}
+		
+		// 이전 버튼에 클릭 이벤트 등록
+		$("#prev").click(function(e){
+			currentIndex--;
+			
+			if(currentIndex<0)
+				currentIndex = bannerLength-1;
+			
+			showImage(currentIndex);
+		});
+		
+		// 다음 버튼을 클릭 이벤트 등록
+		$("#next").click(function(e){
+			currentIndex++;
+			
+			if(currentIndex>=bannerLength)
+				currentIndex = 0;
+			
+			showImage(currentIndex);
+		});
+	});
+</script>
+</head>
+<body>
+	<div class="wrap">
+		<button id="prev">이전</button>
+		<button id="next">다음</button>
+		<div class="banner">
+			<div class="banner-container">
+				<img src="./img/1.png">
+				<img src="./img/2.png">
+				<img src="./img/3.png">
+				<img src="./img/4.png">
+				<img src="./img/5.png">
+			</div>
+		</div>
+	</div>
+</body>
+</html>
